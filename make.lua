@@ -1,13 +1,13 @@
 local env = {
 
   name = "santoku-markdown",
-  version = "0.0.4-1",
+  version = "0.0.5-1",
   license = "MIT",
   public = true,
 
   dependencies = {
     "lua == 5.1",
-    "santoku >= 0.0.310-1",
+    "santoku >= 0.0.328-1",
   },
 
   test = {
