@@ -1,15 +1,47 @@
-# Santoku Markdown
+# santoku-markdown
 
-Markdown to HTML conversion module for Lua.
+A C binding that renders Markdown to HTML. It wraps [Sundown](https://github.com/vmg/sundown),
+a Markdown parser in C, and exposes a single conversion entry point to Lua. Built on base
+[`santoku`](../lua-santoku/README.md) for its test harness.
 
-## Module Reference
+This README is a usage guide, not an API reference. The tests are the spec: see
+`test/spec/santoku/markdown.lua` for the exercised surface.
 
-### `santoku.markdown`
-Markdown to HTML conversion utilities.
+## Usage
 
-| Function | Arguments | Returns | Description |
-|----------|-----------|---------|-------------|
-| `to_html` | `markdown_string` | `string` | Converts Markdown string to HTML |
+`require("santoku.markdown")` returns a table with one function, `to_html`. It takes a Markdown
+string and returns the rendered HTML string.
+
+```lua
+local md = require("santoku.markdown")
+
+md.to_html([[
+# Title
+Some text
+## Subtitle
+1. Hello
+2. World
+]])
+-- <h1>Title</h1>
+--
+-- <p>Some text</p>
+--
+-- <h2>Subtitle</h2>
+--
+-- <ol>
+-- <li>Hello</li>
+-- <li>World</li>
+-- </ol>
+```
+
+The binding calls Sundown with the standard HTML renderer, no extension flags enabled, and a
+maximum block nesting depth of 16. Without extensions, the parser follows Sundown's base Markdown
+behavior; for example a list immediately under a paragraph with no blank-line separator is treated
+as paragraph text, not a list. For the syntax and extension semantics, refer to the
+[Sundown documentation](https://github.com/vmg/sundown).
+
+covers: `to_html` round-trip (headings, paragraphs, ordered lists) in
+`test/spec/santoku/markdown.lua`.
 
 ## License
 
