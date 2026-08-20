@@ -1,9 +1,17 @@
 local env = {
 
   name = "santoku-markdown",
-  version = "2.0.0-1",
+  version = "2.1.0-1",
   license = "MIT",
   public = true,
+
+  vendor = {
+    {
+      file = "deps/sundown/sundown-37728fb2d7137ff7c37d0a474cb827a8d6d846d8.tar.gz",
+      url = "https://github.com/vmg/sundown/archive/37728fb2d7137ff7c37d0a474cb827a8d6d846d8.tar.gz",
+      sha256 = "1819a8f5725077e54586c426b93c5537f9b371dc0b9588ab776e909abf3e00ca",
+    },
+  },
 
   dependencies = {
     "lua == 5.1",
