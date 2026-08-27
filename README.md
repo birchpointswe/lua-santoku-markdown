@@ -1,67 +1,83 @@
+<p align="center">
+  <img src="https://santoku.dev/logo.png" width="96" height="96" alt="santoku">
+</p>
+
 # santoku-markdown
 
-A C binding that renders Markdown to HTML. It wraps [Sundown](https://github.com/vmg/sundown),
-a Markdown parser in C, and exposes a single conversion entry point to Lua. Built on base
-[`santoku`](../lua-santoku/README.md) for its test harness.
+Renders Markdown to HTML. A thin Lua binding over [Sundown](https://github.com/vmg/sundown),
+a Markdown parser in C, exposing a single conversion entry point.
 
-This README is a usage guide, not an API reference. The tests are the spec: see
-`test/spec/santoku/markdown.lua` for the exercised surface.
+## Install
 
-## Usage
-
-`require("santoku.markdown")` returns a table with one function, `to_html`. It takes a Markdown
-string and returns the rendered HTML string.
-
-```lua
-local md = require("santoku.markdown")
-
-md.to_html([[
-# Title
-Some text
-## Subtitle
-1. Hello
-2. World
-]])
--- <h1>Title</h1>
---
--- <p>Some text</p>
---
--- <h2>Subtitle</h2>
---
--- <ol>
--- <li>Hello</li>
--- <li>World</li>
--- </ol>
+```sh
+luarocks install santoku-markdown
 ```
 
-The binding calls Sundown with the standard HTML renderer, no extension flags enabled, and a
-maximum block nesting depth of 16. Without extensions, the parser follows Sundown's base Markdown
-behavior; for example a list immediately under a paragraph with no blank-line separator is treated
-as paragraph text, not a list. For the syntax and extension semantics, refer to the
-[Sundown documentation](https://github.com/vmg/sundown).
+## Example
 
-covers: `to_html` round-trip (headings, paragraphs, ordered lists) in
-`test/spec/santoku/markdown.lua`.
+```lua
+local markdown = require("santoku.markdown")
+
+print(markdown.to_html("# Title\n"))
+```
+
+## Documentation
+
+Runnable examples and the full API: [santoku.dev](https://santoku.dev/#santoku-markdown).
+
+## Tests
+
+The tests are the spec. For the exhaustive surface, read them:
+[`test/spec/santoku/markdown.lua`](test/spec/santoku/markdown.lua).
 
 ## License
 
-MIT License
+MIT, see [LICENSE](LICENSE).
 
-Copyright 2025 Birch Point SWE
+## Anchor spec
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
+Reproduced verbatim from
+[`test/spec/santoku/readme_anchor.lua`](test/spec/santoku/readme_anchor.lua), and kept in
+sync by [`test/spec/santoku/readme.lua`](test/spec/santoku/readme.lua), which fails the
+build if the two ever diverge.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+```lua
+local test = require("santoku.test")
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+local err = require("santoku.error")
+local assert = err.assert
+
+local validate = require("santoku.validate")
+local eq = validate.isequal
+
+local markdown = require("santoku.markdown")
+
+test("render a markdown document to html", function ()
+  assert(eq(markdown.to_html([[
+# Title
+Some text
+- One
+- Two
+## Subtitle
+1. Hello
+2. World
+  ]]), [[
+<h1>Title</h1>
+
+<p>Some text
+- One
+- Two</p>
+
+<h2>Subtitle</h2>
+
+<ol>
+<li>Hello</li>
+<li>World</li>
+</ol>
+]]))
+end)
+
+test("to_html always returns a string", function ()
+  assert(eq(type(markdown.to_html("plain")), "string"))
+end)
+```
