@@ -25,6 +25,9 @@ print(markdown.to_html("# Title\n"))
 
 Runnable examples and the full API: [santoku.dev](https://santoku.dev/#santoku-markdown).
 
+For agents and LLM tooling: [llms.txt](https://santoku.dev/llms.txt) for the index,
+[llms-full.txt](https://santoku.dev/llms-full.txt) for every documented example.
+
 ## Tests
 
 The tests are the spec. For the exhaustive surface, read them:
