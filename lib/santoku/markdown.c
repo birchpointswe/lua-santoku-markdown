@@ -13,6 +13,14 @@
 
 #define OUTPUT_UNIT 64
 
+#define EXTENSIONS ( \
+  MKDEXT_TABLES | \
+  MKDEXT_FENCED_CODE | \
+  MKDEXT_AUTOLINK | \
+  MKDEXT_STRIKETHROUGH | \
+  MKDEXT_NO_INTRA_EMPHASIS | \
+  MKDEXT_SPACE_HEADERS )
+
 static inline int to_html (lua_State *L)
 {
   lua_settop(L, 1);
@@ -27,7 +35,7 @@ static inline int to_html (lua_State *L)
 
 	ob = bufnew(OUTPUT_UNIT);
 	sdhtml_renderer(&callbacks, &options, 0);
-	markdown = sd_markdown_new(0, 16, &callbacks, &options);
+	markdown = sd_markdown_new(EXTENSIONS, 16, &callbacks, &options);
 	sd_markdown_render(ob, (uint8_t *) s, size, markdown);
 	sd_markdown_free(markdown);
 

@@ -26,3 +26,34 @@ Some text
 </ol>
 ]])
 end)
+
+test("tables", function ()
+  assert(md.to_html([[
+| A | B |
+|---|---|
+| 1 | 2 |
+]]) == [[
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+]])
+end)
+
+test("fenced code", function ()
+  assert(md.to_html([[
+```lua
+local x = 1
+```
+]]) == [[
+<pre><code class="lua">local x = 1
+</code></pre>
+]])
+end)
